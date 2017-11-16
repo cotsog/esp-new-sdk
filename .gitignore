@@ -1,0 +1,16 @@
+math_libs/*
+tarballs/*
+sdk/*
+src/*
+dist/*
+!src/patches
+xtensa*
+x86_64*
+*.log
+*.txt
+*.tar.gz
+*.sh
+deploy*
+.travis*
+!.travis.yml
+backup

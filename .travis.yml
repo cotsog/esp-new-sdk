@@ -1,0 +1,186 @@
+sudo: false
+language: cpp
+stages: 
+  - Test
+  - Linux-Dist
+  - OSX-Binutils
+  - OSX-Pass-1
+  - OSX-Pass-2
+  - OSX-Dist
+jobs:
+  include:
+###################################
+    - os: linux
+      dist: trusty
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - bsdtar
+            - gperf
+            - texinfo
+            - help2man
+            - gcc-multilib
+            - g++-multilib
+      before_install:
+        # unset is needed for libhal
+        - test -n $CC  && unset CC
+        - test -n $CXX && unset CXX
+        - echo With-osx $WITH_OSX
+        - cd $TRAVIS_BUILD_DIR
+        - wget -c http://ftp.gnu.org/gnu/automake/automake-1.15.tar.xz; tar xf automake-1.15.tar.xz; rm automake-1.15.tar.xz
+        - cd automake-1.15; ./configure -q --prefix=/usr && make V=0; sudo make V=0 install; cd ..; rm -fR automake-1.15
+      #before_script: #step L2 is global
+      script:
+        - DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz
+        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make; fi
+      #after_script: #step L4 is global
+      before_cache: # caching is after the script
+        - rm -f src/gmp* src/mpfr* src/mpc* src/binutils*
+      cache: ###false
+        directories:
+          - xtensa-lx106-elf/
+          - dist/
+###################################
+    - os: osx
+      osx_image: xcode8.3
+      before_install: #step O1
+        - test -n $CC  && unset CC
+        - test -n $CXX && unset CXX
+        - cd $TRAVIS_BUILD_DIR
+      #before_script: #step O2 is global
+      script:
+        - rm -f math_libs/.installed-*
+        - rm -f xtensa-lx106-elf/.installed-*
+      #after_script: #step O4 is global
+      #before_cache: #step O3 is global
+      cache: ###false
+        timeout: 2000
+        directories:
+          - math_libs/
+          - src/gcc-7.2.0/
+          - xtensa-lx106-elf/
+          - dist/
+###################################
+    - stage: Linux-Dist
+      os: linux
+      dist: trusty
+      script:
+        #after_success:
+        - echo ======== Linux-Dist
+        - sudo apt-get install bsdtar
+        - make dist
+        - DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz
+      after_script:
+        - rm -fR xtensa-lx106-elf
+        - ls -l
+      before_cache:
+        - ls -l
+        - rm -f src/gmp* src/mpfr* src/mpc* src/binutils*
+      cache: ###false
+        directories:
+          - dist/
+###################################
+    - stage: OSX-Binutils
+      os: osx
+      osx_image: xcode8.3
+      before_install: #step O1
+        - test -n $CC  && unset CC
+        - test -n $CXX && unset CXX
+        - cd $TRAVIS_BUILD_DIR
+      #before_script: #step O2 is global
+      script:
+        - rm -f math_libs/.installed-*
+        - rm -f xtensa-lx106-elf/.installed-*
+        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
+        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make build-binutils; make get-gcc; fi
+      #after_script: #step O4 is global
+      #before_cache: #step O3 is global
+      cache: ###false
+        timeout: 2000
+        directories:
+          - math_libs/
+          - src/gcc-7.2.0/
+          - xtensa-lx106-elf/
+          - dist/
+###################################
+    - stage: OSX-Pass-1
+      os: osx
+      osx_image: xcode8.3
+      #before_install: #step O1 is global
+      script:
+        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
+        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make build-gcc-pass-1; fi
+      cache: ###false
+        timeout: 2000
+        directories:
+          - math_libs/
+          - src/gcc-7.2.0/
+          - xtensa-lx106-elf/
+          - dist/
+###################################
+    - stage: OSX-Pass-2
+      os: osx
+      osx_image: xcode8.3
+      #before_install: #step O1 is global
+      #before_script: #step O2 is global
+      script:
+        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
+        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make build-gcc-pass-2; fi
+      cache: ###false
+        timeout: 2000
+        directories:
+          - math_libs/
+          - src/gcc-7.2.0/
+          - xtensa-lx106-elf/
+          - dist/
+###################################
+    - stage: OSX-Dist
+      os: osx
+      osx_image: xcode8.3
+      script:
+        #after_success:
+        - make dist
+        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
+      after_script:
+        - rm -fR xtensa-lx106-elf
+        - ls -laR
+      cache: ###false
+        timeout: 2000
+        directories:
+          - dist/
+###################################
+deploy:
+      provider: releases
+      api_key:
+        secure: secret
+      file_glob: true
+      file: dist/$DEPLOY_FILE
+      skip_cleanup: true
+      on:
+        stage:
+        - Linux-Dist
+        - OSX-Dist
+        branches:
+        only:
+        - master
+        - /v\d+\.\d+[a-z]/
+        repo: Juppit/esp-new-sdk
+        tags: true
+###################################
+before_script: # L2 O2/7/9
+  - cd $TRAVIS_BUILD_DIR
+  - ls -l
+  - if [ -d src ]; then ls -l src; fi
+  - if [ -d dist ]; then ls -l dist; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
+before_cache: # L4 O4
+  - rm -f src/gmp* src/mpfr* src/mpc* src/binutils*
+after_script: # L6 O5
+  - cd $TRAVIS_BUILD_DIR
+  - ls -l
+  - if [ -d src ]; then ls -l src; fi
+  - if [ -d dist ]; then ls -l dist; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
+  - if [ -d xtensa-lx106-elf/bin ]; then ls -la xtensa-lx106-elf/bin; fi
