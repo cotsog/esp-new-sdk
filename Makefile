@@ -6,7 +6,7 @@
 # Credits to Paul Sokolovsky (@pfalcon) for esp-open-sdk
 # Credits to Fabien Poussin (@fpoussin) for xtensa-lx106-elf build script
 #
-# Last edit: 15.11.2017
+# Last edit: 18.11.2017
 
 #*******************************************
 #************** configuration **************
@@ -107,7 +107,7 @@ SDK_VERSION = 1.5.3
 SDK_VERSION = 1.5.4
 SDK_VERSION = 2.0.0
 SDK_VERSION = 2.1.0
-SDK_VERSION = 2.1.0-18-g61248df
+SDK_VERSION = 2.1.x
 
 GMP_VERSION = 6.0.0a
 GMP_VERSION = 6.1.0
@@ -309,7 +309,7 @@ SDK_VER_1.3.0-rtos = esp-rtos-sdk-v1.3.0
 #ESP8266_NONOS_SDK-2.1.0-18-g61248df
 SDK_URL_2.1.x = "https://github.com/espressif/ESP8266_NONOS_SDK/archive/release/v2.1.x.zip"
 SDK_ZIP_2.1.x = ESP8266_NONOS_SDK-release-v2.1.x
-SDK_VER_2.1.0-18 = esp_iot_sdk_v2.1.x
+SDK_VER_2.1.x = esp_iot_sdk_v2.1.x
 SDK_URL_2.1.0 = "https://github.com/espressif/ESP8266_NONOS_SDK/archive/v2.1.0.zip"
 SDK_ZIP_2.1.0 = ESP8266_NONOS_SDK-2.1.0
 SDK_VER_2.1.0 = esp_iot_sdk_v2.1.0
@@ -469,12 +469,11 @@ sdk_patch_1.4.0-rtos:
 
 sdk_patch_1.3.0-rtos:
 
-sdk_patch_2.1.0-18-g61248df: $(SDK_DIR)/user_rf_cal_sector_set.o
+sdk_patch_2.1.x: $(SDK_DIR)/user_rf_cal_sector_set.o
 	@echo -e "#undef ESP_SDK_VERSION\n#define ESP_SDK_VERSION 020100" >>$(SDK_DIR)/include/esp_sdk_ver.h
-	-@$(PATCH) -d $(SDK_DIR) -p1 -i $(PATCH_DIR)/c_types-c99_sdk_2.patch $(SILENT)
-	cd $(SDK_DIR)/lib; mkdir -p tmp; cd tmp; $(TOOLCHAIN)/bin/$(XAR) x ../libcrypto.a; cd ..; $(TOOLCHAIN)/bin/$(XAR) rs libwpa.a tmp/*.o; rm -R tmp
-	$(TOOLCHAIN)/bin/$(XAR) r $(SDK_DIR)/lib/libmain.a $(SDK_DIR)/user_rf_cal_sector_set.o
-	@touch $@
+	-@$(PATCH) -d $(SDK_DIR) -p1 -i $(PATCHES_DIR)/c_types-c99_sdk_2.patch $(SILENT)
+	@cd $(SDK_DIR)/lib; mkdir -p tmp; cd tmp; $(TOOLCHAIN)/bin/$(XAR) x ../libcrypto.a; cd ..; $(TOOLCHAIN)/bin/$(XAR) rs libwpa.a tmp/*.o; rm -R tmp
+	@$(TOOLCHAIN)/bin/$(XAR) r $(SDK_DIR)/lib/libmain.a $(SDK_DIR)/user_rf_cal_sector_set.o
 
 sdk_patch_2.1.0: $(SDK_DIR)/user_rf_cal_sector_set.o
 	@echo -e "#undef ESP_SDK_VERSION\n#define ESP_SDK_VERSION 020100" >>$(SDK_DIR)/include/esp_sdk_ver.h
@@ -579,6 +578,7 @@ ifeq "$(wildcard $@ )" ""
 	$(info #########################)
 	$(info #### Download SDK... ####)
 	$(info #########################)
+	echo $(SDK_URL) $(TAR_DIR)/$(SDK_VER).zip
 	$(WGET) --content-disposition $(SDK_URL) --output-document $@
 endif
 
