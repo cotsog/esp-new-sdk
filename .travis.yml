@@ -1,5 +1,7 @@
 sudo: false
 language: cpp
+notifications:
+  email: false
 stages: 
   - Test
   - Linux-Dist
