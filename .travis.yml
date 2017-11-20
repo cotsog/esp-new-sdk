@@ -155,8 +155,7 @@ jobs:
 ###################################
 deploy:
       provider: releases
-      api_key:
-        secure: secret
+      api_key: DiployToken
       file_glob: true
       file: dist/$DEPLOY_FILE
       skip_cleanup: true
