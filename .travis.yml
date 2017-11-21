@@ -41,26 +41,6 @@ jobs:
         directories:
           - xtensa-lx106-elf/
           - dist/
-    - os: osx
-      osx_image: xcode8.3
-      before_install:
-        - test -n $CC  && unset CC
-        - test -n $CXX && unset CXX
-        - cd $TRAVIS_BUILD_DIR
-      #before_script: # global
-      script:
-        - rm -f math_libs/.installed-*
-        - rm -f xtensa-lx106-elf/.installed-*
-      #after_script: # global
-      before_cache:
-        - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
-      cache: ###false
-        timeout: 2000
-        directories:
-          - math_libs/
-          - src/gcc-7.2.0/
-          - xtensa-lx106-elf/
-          - dist/
     - stage: Osx-binutils
       os: osx
       osx_image: xcode8.3
