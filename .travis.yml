@@ -4,14 +4,13 @@ notifications:
   email: false
 stages: 
   - Test
-  - Linux-Dist
-  - OSX-Binutils
-  - OSX-Pass-1
-  - OSX-Pass-2
-  - OSX-Dist
+  - Linux-dist
+  - Osx-binutils
+  - Osx-pass-1
+  - Osx-pass-2
+  - Osx-dist
 jobs:
   include:
-###################################
     - os: linux
       dist: trusty
       addons:
@@ -39,12 +38,11 @@ jobs:
         - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make; fi
       #after_script: #step L4 is global
       before_cache: # caching is after the script
-        - rm -f src/gmp* src/mpfr* src/mpc* src/binutils*
+        - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
       cache: ###false
         directories:
           - xtensa-lx106-elf/
           - dist/
-###################################
     - os: osx
       osx_image: xcode8.3
       before_install: #step O1
@@ -64,8 +62,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-###################################
-    - stage: Linux-Dist
+    - stage: Linux-dist
       os: linux
       dist: trusty
       script:
@@ -83,8 +80,7 @@ jobs:
       cache: ###false
         directories:
           - dist/
-###################################
-    - stage: OSX-Binutils
+    - stage: Osx-binutils
       os: osx
       osx_image: xcode8.3
       before_install: #step O1
@@ -106,8 +102,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-###################################
-    - stage: OSX-Pass-1
+    - stage: Osx-pass-1
       os: osx
       osx_image: xcode8.3
       #before_install: #step O1 is global
@@ -121,8 +116,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-###################################
-    - stage: OSX-Pass-2
+    - stage: Osx-pass-2
       os: osx
       osx_image: xcode8.3
       #before_install: #step O1 is global
@@ -137,8 +131,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-###################################
-    - stage: OSX-Dist
+    - stage: Osx-dist
       os: osx
       osx_image: xcode8.3
       script:
@@ -152,7 +145,6 @@ jobs:
         timeout: 2000
         directories:
           - dist/
-###################################
 deploy:
       provider: releases
       api_key: $DeployToken
@@ -169,7 +161,8 @@ deploy:
         - /v\d+\.\d+[a-z]/
         repo: Juppit/esp-new-sdk
         tags: true
-###################################
+      script:
+        - make dist
 before_script: # L2 O2/7/9
   - cd $TRAVIS_BUILD_DIR
   - ls -l
@@ -177,7 +170,7 @@ before_script: # L2 O2/7/9
   - if [ -d dist ]; then ls -l dist; fi
   - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
 before_cache: # L4 O4
-  - rm -f src/gmp* src/mpfr* src/mpc* src/binutils*
+  - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
 after_script: # L6 O5
   - cd $TRAVIS_BUILD_DIR
   - ls -l
