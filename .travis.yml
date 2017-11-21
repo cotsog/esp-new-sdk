@@ -33,10 +33,10 @@ jobs:
       #before_script: # global
       script:
         - DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz
-        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make; fi
+        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make; else echo nothing to do; fi
       #after_script: # global
       before_cache: # caching is after the script
-        - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
+        #- rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
       cache: ###false
         directories:
           - xtensa-lx106-elf/
@@ -116,15 +116,15 @@ deploy:
         - make dist
 after_deploy:
   - echo deploy end
-  - rm -fR xtensa-lx106-elf
-  - ls -laR
-before_script: # L2 O2/7/9
+  #- rm -fR xtensa-lx106-elf
+  - ls -ladR
+before_script: # 
   - cd $TRAVIS_BUILD_DIR
   - ls -l
   - if [ -d src ]; then ls -l src; fi
   - if [ -d dist ]; then ls -l dist; fi
   - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
-after_script: # L6 O5
+after_script:  # 
   - cd $TRAVIS_BUILD_DIR
   - ls -l
   - if [ -d src ]; then ls -l src; fi
