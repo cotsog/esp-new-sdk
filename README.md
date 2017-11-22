@@ -30,7 +30,7 @@ If you like to prepare the build before 'make' you can:
 
 You can use the following versions
 ```bash
-  xtensa-lx106-elf-sdk			version 2.1.x down to 1.5.0
+  xtensa-lx106-elf-sdk:		version 2.1.x down to 1.5.0
 ```
 
 To build the complete project use the following command
