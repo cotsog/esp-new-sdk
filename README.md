@@ -2,14 +2,14 @@
 
 Makefile to build the toolchain and a complete standalone SDK for Espressif ESP8266.
 
-It was developed for use under Windows for Cygwin.
-Under Travis the build works for Linux as well as for MacOS.
+It was developed for use under Windows on Cygwin.
+Under Travis-CI it builds successfully on Linux as well as on MacOS.
 
-Builds work on
+So it should build successfully on
 - Cygwin
 - MSYS
 - MinGW32
-- on Linux, (maybe LinuxARM)
+- Linux (maybe LinuxARM)
 - MacOS
 
 Install the project in a directory such as <esp-new-sdk>:
@@ -28,7 +28,7 @@ If you like to prepare the build before 'make' you can:
   make get-src
 ```
 
-You can use the following versions
+If you edit the 'Makefile' you can use the following versions
 ```bash
   xtensa-lx106-elf-sdk:		version 2.1.x down to 1.5.0
 ```
@@ -56,4 +56,5 @@ To build parts of the project use the following commands
 
 To rebuild one of the above parts it should be enough to
 - first delete the associated build directory (e.g. esp-new-sdk/src/binutils-2.2.9/build-Cygwin)
-- additional delete the corresponding file <.installed-xxx> in the directory xtensa-lx106-elf
+- additional delete the corresponding file <.installed-xxx> in the directory 'xtensa-lx106-elf'
+- for math libraries delete <.installed-xxx> in the directory 'math_libs'
