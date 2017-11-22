@@ -30,11 +30,10 @@ jobs:
         - cd automake-1.15; ./configure -q --prefix=/usr && make V=0; sudo make V=0 install; cd ..; rm -fR automake-1.15
       #before_script: # global
       script:
-        - DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz
-        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/Linux-64-xtensa-lx106-elf.tar.gz ]; then make; else 'echo nothing to do'; fi
       #after_script: # global
-      #before_cache: # caching is after the script
-        #- rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
+      before_cache: # caching is after the script
+        - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
       cache: ###false
         directories:
           - xtensa-lx106-elf/
@@ -49,8 +48,7 @@ jobs:
       script:
         - rm -f math_libs/.installed-*
         - rm -f xtensa-lx106-elf/.installed-*
-        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
-        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make build-binutils; make get-gcc; fi
+        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-binutils; make get-gcc; else 'echo nothing to do'; fi
       #after_script: # global
       before_cache: # caching is after the script
         - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
@@ -68,8 +66,7 @@ jobs:
       osx_image: xcode8.3
       #before_install: # no global
       script:
-        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
-        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make build-gcc-pass-1; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-1; else 'echo nothing to do'; fi
       cache: ###false
         timeout: 2000
         directories:
@@ -85,8 +82,7 @@ jobs:
       #before_install: # no global
       #before_script:  # global
       script:
-        - DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz
-        - if [ ! -d dist ] || [ ! -f dist/$DEPLOY_FILE ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
       cache: ###false
         timeout: 2000
         directories:
