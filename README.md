@@ -55,6 +55,13 @@ To build parts of the project use the following commands
 ```
 
 To rebuild one of the above parts it should be enough to
-- first delete the associated build directory (e.g. esp-new-sdk/src/binutils-2.2.9/build-Cygwin)
-- additional delete the corresponding file <.installed-xxx> in the directory 'xtensa-lx106-elf'
+- delete the associated build directory (e.g. esp-new-sdk/src/binutils-2.2.9/build-Cygwin)
+- delete the corresponding file <.installed-xxx> in the directory 'xtensa-lx106-elf'
 - for math libraries delete <.installed-xxx> in the directory 'math_libs'
+Note: build directories are named after the operating system, for example 'build-Cygwin'
+
+To clean the build system use the following commands
+```bash
+  make clean            # removes all build directories and <.installed-xxx> marker
+  make purge            # removes additionally the source directories
+```
