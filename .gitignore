@@ -5,12 +5,10 @@ src/*
 dist/*
 !src/patches
 xtensa*
-x86_64*
+backup
 *.log
 *.txt
 *.tar.gz
 *.sh
-deploy*
 .travis*
 !.travis.yml
-backup
