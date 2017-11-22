@@ -12,18 +12,17 @@ Thus it should build successfully on
 - Linux (maybe LinuxARM)
 - MacOS
 
-Install the project in a directory of your choice, for example '<esp-new-sdk>'
+Install the project in a directory of your choice, for example 'esp-new-sdk'
 ```bash
-  mkdir esp-new-sdk
   git clone https://github.com/Juppit/esp-new-sdk esp-new-sdk
 ```
 
-If you like to prepare the build before 'make' you can:
+If you like to prepare the build before 'make' you can
 - download the sources into the tarballs directory:
 ```bash
   make get-tars
 ```
-- extract them into there source directories:
+- extract them into there source directories
 ```bash
   make get-src
 ```
@@ -33,14 +32,13 @@ If you edit the 'Makefile' you can use the following versions
   xtensa-lx106-elf-sdk:   version 2.1.x down to 1.5.0
 ```
 
-To build the complete project use the following command
+To build the complete project use the following command:
 ```bash
   make                  # build all with last versions
                         # configure with or without gdb and lwip
 ```
 
-To build parts of the project use the following commands
-
+To build parts of the project use the following commands:
 ```bash
   make build-gmp        # version 6.1.2 down to 6.0.0a
   make build-mpfr       # version 3.1.6 down to 3.1.1
@@ -54,10 +52,11 @@ To build parts of the project use the following commands
   make build-lwip       # version esp-open-lwip
 ```
 
-To rebuild one of the above parts it should be enough to
+To rebuild one of the above parts it should be enough to:
 - delete the associated build directory (e.g. esp-new-sdk/src/binutils-2.2.9/build-Cygwin)
 - delete the corresponding file <.installed-xxx> in the directory 'xtensa-lx106-elf'
-- for math libraries delete <.installed-xxx> in the directory 'math_libs'
+- for math libraries delete <.installed-xxx> in the directory 'math_libs'.
+
 Note: build directories are named after the operating system, for example 'build-Cygwin'
 
 To clean the build system use the following commands
