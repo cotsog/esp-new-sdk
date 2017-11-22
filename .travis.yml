@@ -30,14 +30,16 @@ jobs:
         - cd automake-1.15; ./configure -q --prefix=/usr && make V=0; sudo make V=0 install; cd ..; rm -fR automake-1.15
       #before_script: # global
       script:
+        - if [ ! -d math_libs ]; then rm math_libs/.installed-*; fi
+        - if [ ! -d xtensa-lx106-elf ]; then rm xtensa-lx106-elf/.installed-*; fi
         - if [ ! -d dist ] || [ ! -f dist/Linux-64-xtensa-lx106-elf.tar.gz ]; then make; else 'echo nothing to do'; fi
       #after_script: # global
-      before_cache: # caching is after the script
-        - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
-      cache: ###false
-        directories:
-          - xtensa-lx106-elf/
-          - dist/
+      #before_cache: # caching is after the script
+      #  - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
+      cache: false
+      #  directories:
+      #    - xtensa-lx106-elf/
+      #    - dist/
     - os: osx
       osx_image: xcode8.3
       before_install:
