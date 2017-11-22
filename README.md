@@ -14,33 +14,44 @@ Builds work on Windows for
 - MacOS
 
 Install the project in a directory such as <esp-new-sdk>:
+```bash
   mkdir esp-new-sdk
   git clone https://github.com/Juppit/esp-new-sdk esp-new-sdk
+```
 
 If you like to prepare the build before make you can:
 - download the used sources into the tarballs directory:
+```bash
   make get-tars
+```
 - extract the sources into there source directories:
+```bash
   make get-src
+```
 
 You can use the following versions
   xtensa-lx106-hal sdk		version 2.1.x down to 1.5.0
 
 To build the complete project use the following command
-  make						build all with last versions
-							configure with gdb and lwip or without
+```bash
+  make				build all with last versions
+				configure with gdb and lwip or without
+```
 
 To build parts of the project use the following commands
-  make build-gmp			version 6.1.2 down to 6.0.0a
-  make build-mpfr			version 3.1.6 down to 3.1.1
-  make build-mpc			version 1.0.3 down to 1.0.1
+
+```bash
+  make build-gmp		version 6.1.2 down to 6.0.0a
+  make build-mpfr		version 3.1.6 down to 3.1.1
+  make build-mpc		version 1.0.3 down to 1.0.1
   make build-binutils		version 2.26  down to 2.29
   make build-gcc-pass-1		version 7.2.0 down to 4.8.2
-  make build-newlib			version xtensa
+  make build-newlib		version xtensa
   make build-gcc-pass-2
   make build-gcc-libhal		version lx106-hal
-  make build-gdb			version 8.0.1 down to 7.5.1
-  make build-lwip			version esp-open-lwip
+  make build-gdb		version 8.0.1 down to 7.5.1
+  make build-lwip		version esp-open-lwip
+```
 
 To rebuild one of the above parts it should be enough to delete first the associated build directory (e.g. esp-new-sdk/src/binutils-2.2.9/build-Cygwin)
 Additional the corosponding file <.installed-xxx> should be deleted in the directory xtensa-lx106-elf.
