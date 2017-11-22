@@ -117,14 +117,10 @@ after_deploy:
   - ls -ladR
 before_script: # 
   - cd $TRAVIS_BUILD_DIR
-  - ls -l
   - if [ -d src ]; then ls -l src; fi
-  - if [ -d dist ]; then ls -l dist; fi
   - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
+  - if [ -d dist ]; then ls -l dist; fi
 after_script:  # 
   - cd $TRAVIS_BUILD_DIR
-  - ls -l
-  - if [ -d src ]; then ls -l src; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; du -sh xtensa-lx106-elf; fi
   - if [ -d dist ]; then ls -l dist; fi
-  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
-  - if [ -d xtensa-lx106-elf/bin ]; then ls -la xtensa-lx106-elf/bin; fi
