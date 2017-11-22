@@ -33,6 +33,7 @@ jobs:
         - if [ ! -d math_libs ]; then rm -f math_libs/.installed-*; fi
         - if [ ! -d xtensa-lx106-elf ]; then rm -f xtensa-lx106-elf/.installed-*; fi
         - if [ ! -d dist ] || [ ! -f dist/Linux-64-xtensa-lx106-elf.tar.gz ]; then make; else 'echo nothing to do'; fi
+        - make dist
       #after_script: # global
       #before_cache: # caching is after the script
       #  - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
@@ -86,18 +87,19 @@ jobs:
       #before_script:  # global
       script:
         - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
+        - make dist
       #after_script: # global
-      cache: ###false
-        timeout: 2000
-        directories:
-          - math_libs/
-          - src/gcc-7.2.0/
-          - xtensa-lx106-elf/
-          - dist/
-      after_cache:
-        - echo Osx-pass-2 ended
+      cache: false
+      #  timeout: 2000
+      #  directories:
+      #    - math_libs/
+      #    - src/gcc-7.2.0/
+      #    - xtensa-lx106-elf/
+      #    - dist/
+      #after_cache:
+      #  - echo Osx-pass-2 ended
 before_deploy:
-  - make dist
+  #- make dist
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "osx"   ]; then DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz; fi
 deploy:
