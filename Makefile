@@ -6,7 +6,7 @@
 # Credits to Paul Sokolovsky (@pfalcon) for esp-open-sdk
 # Credits to Fabien Poussin (@fpoussin) for xtensa-lx106-elf build script
 #
-# Last edit: 18.11.2017
+# Last edit: 22.11.2017
 
 #*******************************************
 #************** configuration **************
@@ -360,6 +360,7 @@ ifneq ($(DISTRIB), "")
 	@$(MAKE) dist-info
 	@$(MKDIR) $(DIST_DIR)
 	-@bsdtar -cz --exclude=$(TARGET)/.installed-* -f $(DIST_DIR)/$(DISTRIB).tar.gz $(TARGET)
+	@ls -l $(DIST_DIR)
 endif
 
 #*******************************************
