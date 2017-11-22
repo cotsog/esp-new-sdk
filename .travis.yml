@@ -30,8 +30,8 @@ jobs:
         - cd automake-1.15; ./configure -q --prefix=/usr && make V=0; sudo make V=0 install; cd ..; rm -fR automake-1.15
       #before_script: # global
       script:
-        - if [ ! -d math_libs ]; then rm math_libs/.installed-*; fi
-        - if [ ! -d xtensa-lx106-elf ]; then rm xtensa-lx106-elf/.installed-*; fi
+        - if [ ! -d math_libs ]; then rm -f math_libs/.installed-*; fi
+        - if [ ! -d xtensa-lx106-elf ]; then rm -f xtensa-lx106-elf/.installed-*; fi
         - if [ ! -d dist ] || [ ! -f dist/Linux-64-xtensa-lx106-elf.tar.gz ]; then make; else 'echo nothing to do'; fi
       #after_script: # global
       #before_cache: # caching is after the script
@@ -124,5 +124,5 @@ before_script:
   - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
 after_script:
   - cd $TRAVIS_BUILD_DIR
-  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; du -sh xtensa-lx106-elf; fi
   - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; du -sh xtensa-lx106-elf; fi
