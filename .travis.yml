@@ -69,6 +69,7 @@ jobs:
       #before_install: # no global
       script:
         - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-1; else 'echo nothing to do'; fi
+      #after_script: # global
       cache: ###false
         timeout: 2000
         directories:
@@ -85,6 +86,7 @@ jobs:
       #before_script:  # global
       script:
         - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
+      #after_script: # global
       cache: ###false
         timeout: 2000
         directories:
@@ -95,7 +97,6 @@ jobs:
       after_cache:
         - echo Osx-pass-2 ended
 before_deploy:
-  - echo start deploy
   - make dist
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "osx"   ]; then DEPLOY_FILE=MacOS-64-xtensa-lx106-elf.tar.gz; fi
@@ -114,15 +115,14 @@ deploy:
         repo: Juppit/esp-new-sdk
         tags: true
 after_deploy:
-  - echo deploy end
   #- rm -fR xtensa-lx106-elf
   - ls -ladR
-before_script: # 
+before_script:
   - cd $TRAVIS_BUILD_DIR
   - if [ -d src ]; then ls -l src; fi
   - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
-  - if [ -d dist ]; then ls -l dist; fi
-after_script:  # 
+  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
+after_script:
   - cd $TRAVIS_BUILD_DIR
   - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; du -sh xtensa-lx106-elf; fi
-  - if [ -d dist ]; then ls -l dist; fi
+  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
