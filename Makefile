@@ -51,6 +51,7 @@ TARGET = xtensa-lx106-elf
 DISTRIB  := $(BUILD)-$(ARCH)-$(TARGET)
 #DISTRIB  := ""
 
+# the standalone version is used only
 STANDALONE = y
 # debug = y gives a lot of output
 DEBUG = n
@@ -349,7 +350,7 @@ all:
 	@echo "Detected: $(BUILD) with $(ARCH)bit on $(OS)"
 	@echo "Processors: $(NUMBER_OF_PROCESSORS)"
 	@$(MAKE) build-info
-	@$(MAKE_OPT) build # install
+	@$(MAKE_OPT) build
 	@$(MAKE) info
 	@cat build-start.txt; rm build-start.txt
 	@$(OUTPUT_DATE)
@@ -377,12 +378,12 @@ toolchain: $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) $(TOOLCHAIN) $(MLIB_DIR)/.instal
 build: $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) toolchain $(TARGET)/.installed-sdk sdk_patch
 
 # split install for travis build
-install: install-part-0 install-part-1 install-part-2 install-part-3 install-part-4
-install-part-0: install-info $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) get-tars
-install-part-1: $(MLIB_DIR)/.installed-gmp $(MLIB_DIR)/.installed-mpfr $(MLIB_DIR)/.installed-mpc $(TARGET)/.installed-binutils
-install-part-2: $(TARGET)/.installed-gcc-pass-1 $(TARGET)/.installed-newlib
-install-part-3: $(TARGET)/.installed-gcc-pass-2 $(TARGET)/.installed-libhal
-install-part-4: $(TARGET)/.installed-gdb toolchain strip compress
+#install: install-part-0 install-part-1 install-part-2 install-part-3 install-part-4
+#install-part-0: install-info $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) get-tars
+#install-part-1: $(MLIB_DIR)/.installed-gmp $(MLIB_DIR)/.installed-mpfr $(MLIB_DIR)/.installed-mpc $(TARGET)/.installed-binutils
+#install-part-2: $(TARGET)/.installed-gcc-pass-1 $(TARGET)/.installed-newlib
+#install-part-3: $(TARGET)/.installed-gcc-pass-2 $(TARGET)/.installed-libhal
+#install-part-4: $(TARGET)/.installed-gdb toolchain strip compress
 
 get-tars: $(TAR_DIR) $(TAR_DIR)/$(GMP_TAR) $(TAR_DIR)/$(MPFR_TAR) $(TAR_DIR)/$(MPC_TAR) $(TAR_DIR)/$(BIN_TAR) $(TAR_DIR)/$(GCC_TAR) $(TAR_DIR)/$(NLX_TAR) $(TAR_DIR)/$(HAL)-$(HAL_TAR) $(TAR_DIR)/$(GDB_TAR)
 get-src: $(GMP_DIR)/configure.ac $(MPFR_DIR)/configure.ac $(MPC_DIR)/configure.ac $(BIN_DIR)/configure.ac $(GCC_DIR)/configure.ac $(NLX_DIR)/configure.ac $(HAL_DIR)/configure.ac $(GDB_DIR)/configure.ac
