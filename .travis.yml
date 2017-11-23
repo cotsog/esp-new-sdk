@@ -1,7 +1,5 @@
 sudo: false
 language: cpp
-notifications:
-  email: false
 stages: 
   - Test
   - Osx-pass-1
@@ -89,15 +87,24 @@ jobs:
         - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
         - make dist
       #after_script: # global
-      cache: false
-      #  timeout: 2000
-      #  directories:
-      #    - math_libs/
-      #    - src/gcc-7.2.0/
-      #    - xtensa-lx106-elf/
-      #    - dist/
+      cache: ###false
+        timeout: 2000
+        directories:
+          - math_libs/
+          - src/gcc-7.2.0/
+          - xtensa-lx106-elf/
+          - dist/
       #after_cache:
       #  - echo Osx-pass-2 ended
+before_script:
+  - cd $TRAVIS_BUILD_DIR
+  - if [ -d src ]; then ls -l src; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
+  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
+after_script:
+  - cd $TRAVIS_BUILD_DIR
+  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; du -sh xtensa-lx106-elf; fi
 before_deploy:
   #- make dist
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then DEPLOY_FILE=Linux-64-xtensa-lx106-elf.tar.gz; fi
@@ -119,12 +126,5 @@ deploy:
 after_deploy:
   #- rm -fR xtensa-lx106-elf
   - ls -ladR
-before_script:
-  - cd $TRAVIS_BUILD_DIR
-  - if [ -d src ]; then ls -l src; fi
-  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
-  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
-after_script:
-  - cd $TRAVIS_BUILD_DIR
-  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
-  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; du -sh xtensa-lx106-elf; fi
+notifications:
+  email: false
