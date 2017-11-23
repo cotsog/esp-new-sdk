@@ -45,7 +45,9 @@ jobs:
       script:
         - rm -f math_libs/.installed-*
         - rm -f xtensa-lx106-elf/.installed-*
-        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-binutils; make get-gcc; else echo 'nothing to do'; fi
+        - rm -f dist/MacOS-64-xtensa-lx106-elf.tar.gz
+        - make build-binutils
+        - make get-gcc
       #after_script: # global
       before_cache: # caching is after the script
         - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
@@ -72,6 +74,7 @@ jobs:
           - dist/
       after_cache:
         - echo 'Osx-pass-1 ended'
+      deploy: false
     - stage: Osx-pass-2
       os: osx
       osx_image: xcode8.3
@@ -88,6 +91,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
+      deploy: false
     - stage: Osx-dist
       os: osx
       osx_image: xcode8.3
