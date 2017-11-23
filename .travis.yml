@@ -58,7 +58,6 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-      deploy: true
     - stage: Osx-pass-1
       os: osx
       osx_image: xcode8.3
@@ -75,7 +74,6 @@ jobs:
           - dist/
       after_cache:
         - echo 'Osx-pass-1 ended'
-      deploy: true
     - stage: Osx-pass-2
       os: osx
       osx_image: xcode8.3
@@ -92,7 +90,6 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-      deploy: skip
     - stage: Osx-dist
       os: osx
       osx_image: xcode8.3
@@ -135,6 +132,6 @@ deploy:
         repo: Juppit/esp-new-sdk
         tags: true
 after_deploy:
-  - ls -ladR $TRAVIS_BUILD_DIR/
+  - ls -l $TRAVIS_BUILD_DIR/
 notifications:
   email: false
