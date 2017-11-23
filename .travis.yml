@@ -4,7 +4,7 @@ stages:
   - Test
   - Osx-pass-1
   - Osx-pass-2
-  - Osx-pass-3
+  - Osx-dist
 jobs:
   include:
     - os: linux
@@ -31,7 +31,7 @@ jobs:
       script:
         - if [ ! -d math_libs ]; then rm -f math_libs/.installed-*; fi
         - if [ ! -d xtensa-lx106-elf ]; then rm -f xtensa-lx106-elf/.installed-*; fi
-        - if [ ! -d dist ] || [ ! -f dist/Linux-64-xtensa-lx106-elf.tar.gz ]; then make; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/Linux-64-xtensa-lx106-elf.tar.gz ]; then make; else echo 'nothing to do'; fi
         - make dist
       #after_script: # global
       #before_cache: # caching is after the script
@@ -50,7 +50,7 @@ jobs:
       script:
         - rm -f math_libs/.installed-*
         - rm -f xtensa-lx106-elf/.installed-*
-        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-binutils; make get-gcc; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-binutils; make get-gcc; else echo 'nothing to do'; fi
       #after_script: # global
       before_cache: # caching is after the script
         - rm -fR src/gmp* src/mpfr* src/mpc* src/binutils*
@@ -68,7 +68,7 @@ jobs:
       osx_image: xcode8.3
       #before_install: # no global
       script:
-        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-1; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-1; else echo 'nothing to do'; fi
       #after_script: # global
       cache: ###false
         timeout: 2000
@@ -85,7 +85,7 @@ jobs:
       #before_install: # no global
       #before_script:  # global
       script:
-        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
+        - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else echo 'nothing to do'; fi
       #after_script: # global
       cache: ###false
         timeout: 2000
@@ -96,7 +96,7 @@ jobs:
           - dist/
       #after_cache:
       #  - echo Osx-pass-2 ended
-    - stage: Osx-pass-3
+    - stage: Osx-dist
       os: osx
       osx_image: xcode8.3
       #before_install: # no global
