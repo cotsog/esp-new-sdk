@@ -2,8 +2,9 @@
 
 Makefile to build the toolchain and a complete standalone SDK for Espressif ESP8266.
 
-It was developed for use under Windows on Cygwin. 
-Under Travis-CI it builds successfully on Linux as well as on MacOS.
+It was developed for use under Windows on Cygwin.
+
+Under Travis-CI it builds successfully on Linux and as well on MacOS.
 
 Thus it should build successfully on
 - Cygwin
