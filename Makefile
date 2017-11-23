@@ -6,7 +6,7 @@
 # Credits to Paul Sokolovsky (@pfalcon) for esp-open-sdk
 # Credits to Fabien Poussin (@fpoussin) for xtensa-lx106-elf build script
 #
-# Last edit: 22.11.2017
+# Last edit: 23.11.2017
 
 #*******************************************
 #************** configuration **************
@@ -64,10 +64,12 @@ LWIP = n
 # build debugger
 GDB = n
 
+# atm not supported
 # GNU C Library 2.26?
 GLIBC = n
 # ftp://gcc.gnu.org/pub/gcc/infrastructure/ 
 # 0.18?
+# atm not supported
 ISL = n
 # 0.18.1
 CLOOG = n
@@ -372,7 +374,30 @@ $(TOOLCHAIN):
 	@git config --global core.autocrlf false
 	$(MKDIR) $(TOOLCHAIN)
 
-toolchain: $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) $(TOOLCHAIN) $(MLIB_DIR)/.installed-gmp $(MLIB_DIR)/.installed-mpfr $(MLIB_DIR)/.installed-mpc $(TARGET)/.installed-binutils $(TARGET)/.installed-gcc-pass-1 $(TARGET)/.installed-newlib $(TARGET)/.installed-gcc-pass-2 $(TARGET)/.installed-gdb $(TARGET)/.installed-libhal $(TOOLCHAIN)/$(TARGET)/lib/libcirom.a $(TOOLCHAIN)/$(TARGET)/lib/liblwip_open.a strip compress
+if_gdb:
+ifeq ($(GDB),y)
+  $(TARGET)/.installed-gdb
+endif
+
+if_lwip:
+ifeq ($(LWIP),y)
+  $(TOOLCHAIN)/$(TARGET)/lib/liblwip_open.a
+endif
+
+if_strip:
+ifeq ($(STRIP),y)
+  strip
+endif
+
+if_compress:
+ifeq ($(COMPRESS),y)
+  compress
+endif
+
+	
+toolchain: $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) $(TOOLCHAIN) $(MLIB_DIR)/.installed-gmp $(MLIB_DIR)/.installed-mpfr $(MLIB_DIR)/.installed-mpc $(TARGET)/.installed-binutils \
+  $(TARGET)/.installed-gcc-pass-1 $(TARGET)/.installed-newlib $(TARGET)/.installed-gcc-pass-2 $(TARGET)/.installed-libhal \
+  $(TOOLCHAIN)/$(TARGET)/lib/libcirom.a if_gdb if_lwip if_strip if_compress
 
 # be aware: with parallel jobs, this order could be change?
 build: $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) toolchain $(TARGET)/.installed-sdk sdk_patch
@@ -385,8 +410,8 @@ build: $(SOURCE_DIR) $(TAR_DIR) $(MLIB_DIR) toolchain $(TARGET)/.installed-sdk s
 #install-part-3: $(TARGET)/.installed-gcc-pass-2 $(TARGET)/.installed-libhal
 #install-part-4: $(TARGET)/.installed-gdb toolchain strip compress
 
-get-tars: $(TAR_DIR) $(TAR_DIR)/$(GMP_TAR) $(TAR_DIR)/$(MPFR_TAR) $(TAR_DIR)/$(MPC_TAR) $(TAR_DIR)/$(BIN_TAR) $(TAR_DIR)/$(GCC_TAR) $(TAR_DIR)/$(NLX_TAR) $(TAR_DIR)/$(HAL)-$(HAL_TAR) $(TAR_DIR)/$(GDB_TAR)
-get-src: $(GMP_DIR)/configure.ac $(MPFR_DIR)/configure.ac $(MPC_DIR)/configure.ac $(BIN_DIR)/configure.ac $(GCC_DIR)/configure.ac $(NLX_DIR)/configure.ac $(HAL_DIR)/configure.ac $(GDB_DIR)/configure.ac
+get-tars: $(TAR_DIR) $(TAR_DIR)/$(GMP_TAR) $(TAR_DIR)/$(MPFR_TAR) $(TAR_DIR)/$(MPC_TAR) $(TAR_DIR)/$(BIN_TAR) $(TAR_DIR)/$(GCC_TAR) $(TAR_DIR)/$(NLX_TAR) $(TAR_DIR)/$(HAL)-$(HAL_TAR) if_gdb
+get-src: $(GMP_DIR)/configure.ac $(MPFR_DIR)/configure.ac $(MPC_DIR)/configure.ac $(BIN_DIR)/configure.ac $(GCC_DIR)/configure.ac $(NLX_DIR)/configure.ac $(HAL_DIR)/configure.ac if_gdb
 get-gcc: $(GCC_DIR)/configure.ac
 
 build-info:
@@ -1063,7 +1088,6 @@ $(HAL_DIR): $(BUILD_HAL_DIR) $(TARGET)/.installed-libhal
 
 #************** GDB (The GNU debugger)
 $(TAR_DIR)/$(GDB_TAR):
-ifeq ($(GDB),y)
     ifeq "$(wildcard $@ )" ""
 		@$(OUTPUT_DATE)
 		$(info #####################)
@@ -1072,10 +1096,8 @@ ifeq ($(GDB),y)
 		$(MKDIR) $(TAR_DIR)
 		$(WGET) $(GNU_URL)/gdb/$(GDB_TAR) --output-document $(TAR_DIR)/$(GDB_TAR)
     endif
-endif
 
 $(GDB_DIR)/configure.ac: $(TAR_DIR)/$(GDB_TAR)
-ifeq ($(GDB),y)
     ifeq "$(wildcard $@ )" ""
 		@$(OUTPUT_DATE)
 		$(info ########################)
@@ -1085,10 +1107,8 @@ ifeq ($(GDB),y)
 		@$(UNTAR) $(TAR_DIR)/$(GDB_TAR) -C $(SOURCE_DIR)
 		@touch $@
     endif
-endif
 
 $(BUILD_GDB_DIR): $(GDB_DIR)/configure.ac
-ifeq ($(GDB),y)
 	@$(OUTPUT_DATE)
 	$(info ######################)
 	$(info #### Build GDB... ####)
@@ -1100,26 +1120,20 @@ ifeq ($(GDB),y)
 	@rm -f $(TARGET)/.installed-gdb
 	@$(MAKE_OPT) -C $(BUILD_GDB_DIR) $(SILENT)
 	@touch $@
-endif
 
 $(TARGET)/.installed-gdb: $(GDB_BUILD_DIR)
-ifeq ($(GDB),y)
 	@$(OUTPUT_DATE)
 	$(info ########################)
 	$(info #### Install GDB... ####)
 	$(info ########################)
 	@$(MAKE_OPT) $(INST_OPT) -C $(BUILD_GDB_DIR) $(SILENT)
 	@touch $@
-endif
 
 $(GDB_DIR): $(BUILD_GDB_DIR) $(TARGET)/.installed-gdb
-ifeq ($(GDB),y)
 	@touch $@
-endif
 
 #************** Strip Debug
 strip:
-ifeq ($(STRIP),y)
 	@$(OUTPUT_DATE)
 	$(info #######################)
 	$(info ###### stripping ######)
@@ -1127,11 +1141,9 @@ ifeq ($(STRIP),y)
 	@du -sh $(TOOLCHAIN)/bin
 	-@find $(TOOLCHAIN) -maxdepth 2 -type f -perm /0111 -exec strip -s "{}" +
 	@du -sh $(TOOLCHAIN)/bin
-endif
 
 #************** Compress via UPX
 compress:
-ifeq ($(COMPRESS),y)
 	@$(OUTPUT_DATE)
 	$(info #######################)
 	$(info ##### compressing #####)
@@ -1140,7 +1152,6 @@ ifeq ($(COMPRESS),y)
 	-@find $(TOOLCHAIN) -maxdepth 2 -type f -perm /0111 -exec upx -q -1 "{}" +
 	@$(OUTPUT_DATE)
 	@du -sh $(TOOLCHAIN)/bin
-endif
 
 #*******************************************
 #*******************************************
