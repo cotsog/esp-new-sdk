@@ -58,7 +58,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
-      deploy: skip
+      deploy: true
     - stage: Osx-pass-1
       os: osx
       osx_image: xcode8.3
@@ -75,7 +75,7 @@ jobs:
           - dist/
       after_cache:
         - echo 'Osx-pass-1 ended'
-      deploy: skip
+      deploy: true
     - stage: Osx-pass-2
       os: osx
       osx_image: xcode8.3
