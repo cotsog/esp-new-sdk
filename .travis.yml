@@ -4,6 +4,7 @@ stages:
   - Test
   - Osx-pass-1
   - Osx-pass-2
+  - Osx-pass-3
 jobs:
   include:
     - os: linux
@@ -85,13 +86,28 @@ jobs:
       #before_script:  # global
       script:
         - if [ ! -d dist ] || [ ! -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]; then make build-gcc-pass-2; else 'echo nothing to do'; fi
-        - make dist
       #after_script: # global
       cache: ###false
         timeout: 2000
         directories:
           - math_libs/
           - src/gcc-7.2.0/
+          - xtensa-lx106-elf/
+          - dist/
+      #after_cache:
+      #  - echo Osx-pass-2 ended
+    - stage: Osx-pass-3
+      os: osx
+      osx_image: xcode8.3
+      #before_install: # no global
+      #before_script:  # global
+      script:
+        - make dist
+        - ls -ladR $TRAVIS_BUILD_DIR
+      #after_script: # global
+      cache: ###false
+        timeout: 2000
+        directories:
           - xtensa-lx106-elf/
           - dist/
       #after_cache:
@@ -125,6 +141,6 @@ deploy:
         tags: true
 after_deploy:
   #- rm -fR xtensa-lx106-elf
-  - ls -ladR
+  - ls -ladR $TRAVIS_BUILD_DIR
 notifications:
   email: false
