@@ -58,6 +58,7 @@ jobs:
           - src/gcc-7.2.0/
           - xtensa-lx106-elf/
           - dist/
+      deploy: skip
     - stage: Osx-pass-1
       os: osx
       osx_image: xcode8.3
