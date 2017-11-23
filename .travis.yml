@@ -91,7 +91,7 @@ jobs:
     - stage: Osx-dist
       os: osx
       osx_image: xcode8.3
-      if: [ -d dist ] AND [ -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]
+      #if: [ -d dist ] AND [ -f dist/MacOS-64-xtensa-lx106-elf.tar.gz ]
       #before_install: # no global
       #before_script:  # global
       script:
