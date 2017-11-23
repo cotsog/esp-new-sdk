@@ -2,7 +2,7 @@
 
 Makefile to build the toolchain and a complete standalone SDK for Espressif ESP8266.
 
-It was developed for use under Windows on Cygwin.
+It was developed for use under Windows on Cygwin. 
 Under Travis-CI it builds successfully on Linux as well as on MacOS.
 
 Thus it should build successfully on
@@ -59,7 +59,7 @@ To rebuild one of the above parts it should be enough to:
 
 Note: build directories are named after the operating system, for example 'build-Cygwin'
 
-To clean the build system use the following commands
+To clean the build system use the following commands:
 ```bash
   make clean            # removes all build directories and <.installed-xxx> marker
   make purge            # removes additionally the source directories
