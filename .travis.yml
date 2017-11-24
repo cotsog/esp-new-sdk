@@ -130,9 +130,9 @@ deploy:
       skip_cleanup: true
       on:
         branches:
-        only:
-        - master
-        - /v\d+\.\d+[a-z]/
+          only:
+            - master
+            - /v\d+\.\d+[a-z]/
         repo: Juppit/esp-new-sdk
         tags: true
 after_deploy:
