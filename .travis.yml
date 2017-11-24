@@ -97,8 +97,9 @@ jobs:
       #before_install: # no global
       #before_script:  # global
       script:
+        - make
         - make dist
-        - ls -ladR $TRAVIS_BUILD_DIR/
+        - ls -la $TRAVIS_BUILD_DIR/
       #after_script: # global
       cache: ###false
         timeout: 2000
