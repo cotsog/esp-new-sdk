@@ -97,20 +97,23 @@ jobs:
       #before_install: # no global
       #before_script:  # global
       script:
+        - ls -la $TRAVIS_BUILD_DIR
+        - if [ -d math_libs ]; then ls -l math_libs; fi
         - make
         - make dist
-        - ls -la $TRAVIS_BUILD_DIR/
+        - ls -la $TRAVIS_BUILD_DIR
       #after_script: # global
       cache: ###false
         timeout: 2000
         directories:
+          - math_libs/
           - xtensa-lx106-elf/
           - dist/
 before_script:
   - cd $TRAVIS_BUILD_DIR
   - if [ -d src ]; then ls -l src; fi
-  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf/; fi
-  - if [ -d dist ]; then ls -l dist/; else echo 'no dist'; fi
+  - if [ -d xtensa-lx106-elf ]; then ls -la xtensa-lx106-elf; fi
+  - if [ -d dist ]; then ls -l dist; else echo 'no dist'; fi
 after_script:
   - cd $TRAVIS_BUILD_DIR
   - if [ -d dist ]; then ls -l dist/; else echo 'no dist'; fi
